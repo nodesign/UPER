@@ -280,7 +280,6 @@ SFPResult lpc_portWrite(SFPFunction *msg) {
 			pinNum -= 24;
 		}
 		// Output the value
-		LPC_GPIO->DIR[lpc_port] |= (1 << pinNum);	// Set direction bit (output)
 		if (((value >> i) & 0x01) == 0) {
 			LPC_GPIO->CLR[lpc_port] = (1 << pinNum);
 		} else {
