@@ -75,11 +75,11 @@ uint8_t const LPC_PIN_SECONDARY_FUNCTION[] = {
 		0x02 /* ADC1 */,	0x02 /* ADC0 */,// 34
 };
 
-uint8_t const LPC_PORT_MAPPING[] = {
-		20, 19, 13, 12, 14, 1,  8,  21, // PORT 0
-		5,  11, 4,  0,  18, 16, 27, 6,  // PORT 1
-		3,  9,  29, 28, 22, 7,  17, 2,  // PORT 2
-		33, 32, 31, 30, 26, 25, 24, 23,  // PORT 3
+uint8_t const LPC_PORT_MAPPING[4][8] = {
+		{20, 19, 13, 12, 14, 1,  8,  21}, // PORT 0
+		{5,  11, 4,  0, 18, 16, 27, 6},  // PORT 1
+		{3,  9,  29, 28, 22, 7,  17, 2},  // PORT 2
+		{33, 32, 31, 30, 26, 25, 24, 23}  // PORT 3
 };
 
 static volatile SFPFunctionType LPC_INTERRUPT_FUNCTION_TYPE[LPC_INTERRUPT_COUNT];
@@ -230,14 +230,12 @@ SFPResult lpc_portMode(SFPFunction *msg) {
 	if (port >= LPC_PORT_COUNT) return SFP_ERR_ARG_VALUE;
 	if (mode > 4 || mode == 3) return SFP_ERR_ARG_VALUE;
 
-	uint8_t i;
+	uint8_t i = 0;
 	uint8_t lpc_port = 0;
-
+	uint8_t pin = 0;
 	for (i = 0; i < 8; i++) {
-		// Get the current pin
-		uint8_t pin = LPC_PORT_MAPPING[(port*8)+i];
+		pin = LPC_PORT_MAPPING[port][i];
 		uint8_t pinNum = LPC_PIN_IDS[pin];
-
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
 			lpc_port = 1;
 			pinNum -= 24;
@@ -272,11 +270,9 @@ SFPResult lpc_portWrite(SFPFunction *msg) {
 	/* NOTE : The port mapping of WeIO doesn't reflect the real port of LPC.
 	 * The portWrite doesn't set the whole port in the same time, but pin per pin.
 	 */
-	uint8_t pinNum = 0;
 	for (i = 0; i < 8; i++) {
 		// Get the current pin
-		pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[(port*8)+i]];
-		// Get the lpc port for the pin
+		uint8_t pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[port][i]];
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
 			lpc_port = 1;
 			pinNum -= 24;
@@ -310,7 +306,7 @@ SFPResult lpc_portRead(SFPFunction *msg) {
 
 	for (i = 0; i < 8; i++) {
 		// Get the current pin
-		uint8_t pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[(port*8)+i]];
+		uint8_t pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[port][i]];
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
 			lpc_port = 1;
 			pinNum -= 24;
