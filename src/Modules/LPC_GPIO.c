@@ -281,7 +281,7 @@ SFPResult lpc_portWrite(SFPFunction *msg) {
 			lpc_port = 1;
 			pinNum -= 24;
 		}
-		*LPC_PIN_REGISTERS[LPC_PORT_MAPPING[(port*8)+i]] &= ~LPC_PIN_MODE_MASK;	// Remove pull-up/down resistors
+
 		// Output the value
 		if (((value >> i) & 0x01) == 0) {
 			LPC_GPIO->CLR[lpc_port] = (1 << pinNum);
