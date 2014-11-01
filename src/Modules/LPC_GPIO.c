@@ -234,6 +234,7 @@ SFPResult lpc_portMode(SFPFunction *msg) {
 	uint8_t lpc_port = 0;
 	uint8_t pin = 0;
 	for (i = 0; i < 8; i++) {
+		lpc_port = 0;
 		pin = LPC_PORT_MAPPING[port][i];
 		uint8_t pinNum = LPC_PIN_IDS[pin];
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
@@ -271,6 +272,7 @@ SFPResult lpc_portWrite(SFPFunction *msg) {
 	 * The portWrite doesn't set the whole port in the same time, but pin per pin.
 	 */
 	for (i = 0; i < 8; i++) {
+		lpc_port = 0;
 		// Get the current pin
 		uint8_t pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[port][i]];
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
@@ -305,6 +307,7 @@ SFPResult lpc_portRead(SFPFunction *msg) {
 	uint8_t port_val = 0;
 
 	for (i = 0; i < 8; i++) {
+		lpc_port = 0;
 		// Get the current pin
 		uint8_t pinNum = LPC_PIN_IDS[LPC_PORT_MAPPING[port][i]];
 		if (pinNum > 23) {	// if not PIO0_0 to PIO0_23
