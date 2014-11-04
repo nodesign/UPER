@@ -365,18 +365,16 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
      * ¯¯¯¯¯¯¯¯\________/¯¯¯¯¯¯¯¯
      * | ~20ms | ~20ms  | ~40us |
      */
-    /* Pull high for ~20ms */
-    while ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) <= 20000);
+    /* Pull high for ~25ms */
+    while ((Time_getSystemTime_us()-startTimeUs) <= 25000);
     LPC_GPIO->CLR[port] = (1 << pinNum);
     startTimeUs = Time_getSystemTime_us();
-    passedTimeUs = 0;
-    /* Pull low for ~20ms */
-    while ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) <= 20000);
+    /* Pull low for ~25ms */
+    while ((Time_getSystemTime_us()-startTimeUs) <= 25000);
     /* Pull high for ~40us */
     LPC_GPIO->SET[port] = (1 << pinNum);
     startTimeUs = Time_getSystemTime_us();
-    passedTimeUs = 0;
-    while ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) <= 40);
+    while ((Time_getSystemTime_us()-startTimeUs) <= 30);
 
     /* -- Response from sensor --
      * \_______/¯¯¯¯¯¯\______/¯¯¯¯¯¯\______/¯¯¯¯¯¯¯¯¯¯¯¯\___...
@@ -384,15 +382,20 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
      * | start burst  | Answer : 0  | Answer : 1        | .....
      */
     /* Input, pullup */
-
     *LPC_PIN_REGISTERS[dht_data] |= (1 << 2) & LPC_PIN_MODE_MASK;
     LPC_GPIO->DIR[port] &= ~(1 << pinNum);
 
     uint8_t i;
-
     uint8_t j = 0;
     /* Store the last pin state. */
     uint32_t volatile last_val = LPC_GPIO->PIN[port] & (1 << pinNum);
+
+    /* Synchronize with the first falling edge */
+    startTimeUs = Time_getSystemTime_us();
+    while ((LPC_GPIO->PIN[port] & (1 << pinNum)) == (1 << pinNum)) {
+    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
+    		break;
+    }
     /* 40 data bits, each 2 transitions, so there's 80 transitions for data.
      * 2 transitions for the start burst
      * 2 transitions for the end burst
