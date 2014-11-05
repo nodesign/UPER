@@ -359,7 +359,6 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
     LPC_GPIO->SET[port] = (1 << pinNum);
 
     uint32_t startTimeUs = Time_getSystemTime_us();
-    uint32_t passedTimeUs = 0;
 
     /* -- Start condition --
      * ¯¯¯¯¯¯¯¯\________/¯¯¯¯¯¯¯¯
@@ -382,42 +381,32 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
      * | start burst  | Answer : 0  | Answer : 1        | .....
      */
     /* Input, pullup */
+    LPC_GPIO->CLR[port] = (1 << pinNum);
     *LPC_PIN_REGISTERS[dht_data] |= (1 << 2) & LPC_PIN_MODE_MASK;
     LPC_GPIO->DIR[port] &= ~(1 << pinNum);
 
     uint8_t i;
     uint8_t j = 0;
     /* Store the last pin state. */
-    uint32_t volatile last_val = LPC_GPIO->PIN[port] & (1 << pinNum);
 
-    /* Synchronize with the first falling edge */
-    startTimeUs = Time_getSystemTime_us();
-    while ((LPC_GPIO->PIN[port] & (1 << pinNum)) == (1 << pinNum)) {
-    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
-    		break;
-    }
-    /* 40 data bits, each 2 transitions, so there's 80 transitions for data.
-     * 2 transitions for the start burst
-     * 2 transitions for the end burst
-     * So, we're waiting 84 transition for the overall response.
-     */
-    for (i = 0; i < 84; i++) {
-        /* Wait for transitions */
-        startTimeUs = Time_getSystemTime_us();
-        passedTimeUs = 0;
-        while ((LPC_GPIO->PIN[port] & (1 << pinNum)) == last_val) {
-            if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
-                break;
-        }
+    uint32_t cnt = 0;
+    uint32_t cnt_compare = 0;
 
-        /* Ignore start burst and first falling edge. */
-        if ((i >= 2) && ((last_val & (1 << pinNum)) == (1<< pinNum))) {
-            data[j/8] <<= 1;
-            if (passedTimeUs > 40) // If the pulse duration was greater than 30us, it's a '1'
-                data[j/8] |= 1;
-            j++;
-        }
-        last_val = LPC_GPIO->PIN[port] & (1 << pinNum);
+    while (!(LPC_GPIO->PIN[port] & (1 << pinNum)));
+    while ((LPC_GPIO->PIN[port] & (1 << pinNum)));
+
+    for (i = 0; i < 40; i++) {
+    	cnt = 0;
+    	cnt_compare = 0;
+    	while (!(LPC_GPIO->PIN[port] & (1 << pinNum)))
+    		cnt++;
+    	while ((LPC_GPIO->PIN[port] & (1 << pinNum)))
+    		cnt_compare++;
+
+    	data[j/8] <<= 1;
+    	if (cnt < cnt_compare)
+    		data[j/8] |= 1;
+    	j++;
     }
 
 	SFPFunction *outFunc = SFPFunction_new();
