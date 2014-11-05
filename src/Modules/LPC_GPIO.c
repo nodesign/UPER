@@ -359,6 +359,7 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
     LPC_GPIO->SET[port] = (1 << pinNum);
 
     uint32_t startTimeUs = Time_getSystemTime_us();
+    uint32_t passedTimeUs = 0;
 
     /* -- Start condition --
      * ¯¯¯¯¯¯¯¯\________/¯¯¯¯¯¯¯¯
@@ -392,8 +393,19 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
     uint32_t cnt = 0;
     uint32_t cnt_compare = 0;
 
-    while (!(LPC_GPIO->PIN[port] & (1 << pinNum)));
-    while ((LPC_GPIO->PIN[port] & (1 << pinNum)));
+    startTimeUs = Time_getSystemTime_us();
+    passedTimeUs = 0;
+    while (!(LPC_GPIO->PIN[port] & (1 << pinNum))) {
+    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
+    		return SFP_ERR;
+    }
+
+    startTimeUs = Time_getSystemTime_us();
+    passedTimeUs = 0;
+    while ((LPC_GPIO->PIN[port] & (1 << pinNum))) {
+    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
+    		return SFP_ERR;
+    }
 
     for (i = 0; i < 40; i++) {
     	cnt = 0;
