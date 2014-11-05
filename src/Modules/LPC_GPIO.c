@@ -395,30 +395,36 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 
     startTimeUs = Time_getSystemTime_us();
     passedTimeUs = 0;
+    uint8_t error = 0;
     while (!(LPC_GPIO->PIN[port] & (1 << pinNum))) {
-    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
-    		return SFP_ERR;
+    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000) {
+    		error = 1;
+    		break;
+    	}
     }
 
     startTimeUs = Time_getSystemTime_us();
     passedTimeUs = 0;
     while ((LPC_GPIO->PIN[port] & (1 << pinNum))) {
-    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000)
-    		return SFP_ERR;
+    	if ((passedTimeUs=Time_getSystemTime_us()-startTimeUs) >= 1000) {
+    		error = 1;
+    		break;
+    	}
     }
+    if (!error) {
+		for (i = 0; i < 40; i++) {
+			cnt = 0;
+			cnt_compare = 0;
+			while (!(LPC_GPIO->PIN[port] & (1 << pinNum)))
+				cnt++;
+			while ((LPC_GPIO->PIN[port] & (1 << pinNum)))
+				cnt_compare++;
 
-    for (i = 0; i < 40; i++) {
-    	cnt = 0;
-    	cnt_compare = 0;
-    	while (!(LPC_GPIO->PIN[port] & (1 << pinNum)))
-    		cnt++;
-    	while ((LPC_GPIO->PIN[port] & (1 << pinNum)))
-    		cnt_compare++;
-
-    	data[j/8] <<= 1;
-    	if (cnt < cnt_compare)
-    		data[j/8] |= 1;
-    	j++;
+			data[j/8] <<= 1;
+			if (cnt < cnt_compare)
+				data[j/8] |= 1;
+			j++;
+		}
     }
 
 	SFPFunction *outFunc = SFPFunction_new();
