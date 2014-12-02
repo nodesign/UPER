@@ -30,7 +30,7 @@
  *
  */
 
-#include "Modules/LPC_DHTxx.h"
+#include "Modules/LPC_GPIO/LPC_DHTxx.h"
 
 SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 	if (SFPFunction_getArgumentCount(msg) != 1) return SFP_ERR_ARG_COUNT;

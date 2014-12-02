@@ -30,7 +30,7 @@
  *
  */
 #include "main.h"
-#include "Modules/LPC_PORT.h"
+#include "Modules/LPC_GPIO/LPC_PORT.h"
 
 SFPResult lpc_portMode(SFPFunction *msg) {
 	if (SFPFunction_getArgumentCount(msg) != 2) return SFP_ERR_ARG_COUNT;
