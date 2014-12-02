@@ -39,6 +39,7 @@
 #include "Modules/LPC_SPI.h"
 #include "Modules/LPC_I2C.h"
 #include "Modules/LPC_PWM.h"
+#include "Modules/LPC_UART.h"
 
 #include "IAP.h"
 
@@ -133,6 +134,9 @@ int main(void) {
 	SFPServer_addFunctionHandler(server, UPER_FNAME_I2CBEGIN, UPER_FID_I2CBEGIN, lpc_i2c_begin);
 	SFPServer_addFunctionHandler(server, UPER_FNAME_I2CTRANS, UPER_FID_I2CTRANS, lpc_i2c_trans);
 	SFPServer_addFunctionHandler(server, UPER_FNAME_I2CEND,   UPER_FID_I2CEND, lpc_i2c_end);
+
+	/* UART functions */
+	SFPServer_addFunctionHandler(server, UPER_FNAME_UARTINIT,   UPER_FID_UARTINIT, lpc_uart_init);
 
 	/* PWM functions */
 	SFPServer_addFunctionHandler(server, UPER_FNAME_PWM0BEGIN, UPER_FID_PWM0BEGIN, lpc_pwm0_begin);

@@ -74,6 +74,8 @@
 #define UPER_FID_PORTREAD			71
 #define UPER_FID_PORTMODE			72
 
+#define UPER_FID_UARTINIT			80
+
 #define UPER_FID_DHTXXREAD			200
 
 #define UPER_FID_RESTART			251
@@ -119,6 +121,8 @@
 #define UPER_FNAME_PORTWRITE		"portWrite"
 #define UPER_FNAME_PORTREAD			"portRead"
 #define UPER_FNAME_PORTMODE			"portMode"
+
+#define UPER_FNAME_UARTINIT			"uartInit"
 
 #define UPER_FNAME_DHTXXREAD		"dhtRead"
 
