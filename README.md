@@ -1,7 +1,7 @@
 # UPER firmware
 UPER, originally writted by [8devices](https://github.com/8devices/UPER), is the firmware currently used for [WeIO](https://github.com/nodesign/weio).
 
-The original version uses LPCXpresso, with some specific libraries, such as RedLib (a CodeRed proprietary implementation of the Newlib). It does mean that LPCXpresso is required to compile the firmware.
+The original version uses LPCXpresso, with some specific libraries, such as RedLib (a CodeRed proprietary implementation of Newlib). It does mean that LPCXpresso is required to compile the firmware.
 
 This version uses newlib, and can be compiled in a standard way using *make*.
 
