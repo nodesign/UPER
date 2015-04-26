@@ -62,7 +62,7 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 
     /* -- Start condition --
      * ¯¯¯¯¯¯¯¯\________/¯¯¯¯¯¯¯¯
-     * | ~20ms | ~20ms  | ~40us |
+     * | ~25ms | ~25ms  | ~30us |
      */
     /* Pull high for ~25ms */
     while ((Time_getSystemTime_us()-startTimeUs) <= 25000);
@@ -80,9 +80,7 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
      * | 80us  | 80us | 50us | 27us | 50us |  70us      | .....
      * | start burst  | Answer : 0  | Answer : 1        | .....
      */
-    /* Input, pullup */
-    LPC_GPIO->CLR[port] = (1 << pinNum);
-    *LPC_PIN_REGISTERS[dht_data] |= (1 << 2) & LPC_PIN_MODE_MASK;
+    /* Input, no pullup nor pulldown */
     LPC_GPIO->DIR[port] &= ~(1 << pinNum);
 
     uint8_t i;
