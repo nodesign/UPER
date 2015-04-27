@@ -34,9 +34,6 @@
 #define LPC_GPIO_H_
 
 #include "main.h"
-#include "Modules/LPC_GPIO/LPC_INTERRUPT.h"
-#include "Modules/LPC_GPIO/LPC_PORT.h"
-#include "Modules/LPC_GPIO/LPC_DHTxx.h"
 
 uint8_t const LPC_PIN_IDS[] = {
 		0+20,	0+2,	24+26,	24+27,	24+20,	0+21,	24+23,	24+24,	// 8

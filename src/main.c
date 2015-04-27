@@ -35,11 +35,14 @@
 #include "CDC/CDC.h"
 
 #include "Modules/LPC_GPIO.h"
+#include "Modules/LPC_PORT.h"
+#include "Modules/LPC_INTERRUPT.h"
 #include "Modules/LPC_ADC.h"
 #include "Modules/LPC_SPI.h"
 #include "Modules/LPC_I2C.h"
 #include "Modules/LPC_PWM.h"
 #include "Modules/LPC_UART.h"
+#include "Modules/Devices/DHTxx.h"
 
 #include "IAP.h"
 
