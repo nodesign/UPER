@@ -113,9 +113,16 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 			cnt = 0;
 			cnt_compare = 0;
 			while (!(LPC_GPIO->PIN[port] & (1 << pinNum)))
-				cnt++;
+			{
+				if (cnt++ > 1000)
+					break;
+			}
+
 			while ((LPC_GPIO->PIN[port] & (1 << pinNum)))
-				cnt_compare++;
+			{
+				if (cnt_compare++ > 1000)
+					break;
+			}
 
 			data[j/8] <<= 1;
 			if (cnt < cnt_compare)
