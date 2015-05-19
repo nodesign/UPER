@@ -133,9 +133,8 @@ typedef enum
 } ErrorCode_t;
 
 
-#ifndef offsetof
+
 #define offsetof(s,m)   (int)&(((s *)0)->m)
-#endif
 #define COMPILE_TIME_ASSERT(pred)    switch(0){case 0:case pred:;}
 
 #endif /* __LPC_ERROR_H__ */
