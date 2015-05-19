@@ -12,8 +12,8 @@ In order to build the firmware, two dependancies must be included : [SFP](https:
 git clone https://github.com/ks156/UPER
 cd UPER
 git checkout newlib
-git clone https://github.com/8devices/MemoryManager
-git clone https://github.com/giedriusm/SFP
+git submodule init
+git submodule update
 ````
 
 A GCC for ARM toolchain is also required. It can be downloaded and installed from here : [GNU Tools for ARM Embedded Processors](https://launchpad.net/gcc-arm-embedded/+download). 
