@@ -1,5 +1,5 @@
 /**
- * @file	LPC_DHTxx.h
+ * @file	HC-SR04.h
  * @author  Paul Rathgeb <paul.rathgeb@skynet.be>
  *
  * @section LICENSE
@@ -30,12 +30,12 @@
  *
  */
 
-#ifndef LPC_DHTXX_H_
-#define LPC_DHTXX_H_
+#ifndef _HC_SR04_H_
+#define _HC_SR04_H_
 
 #include "main.h"
 #include "Modules/LPC_GPIO.h"
 
-SFPResult lpc_dhtxxRead(SFPFunction *msg);
+SFPResult hcsr04Read(SFPFunction *msg);
 
-#endif // LPC_DHTXX_H_
+#endif // _HC_SR04_H_

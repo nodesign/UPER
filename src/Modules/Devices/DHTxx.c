@@ -30,7 +30,7 @@
  *
  */
 
-#include "Modules/LPC_GPIO/LPC_DHTxx.h"
+#include "Modules/Devices/DHTxx.h"
 
 SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 	if (SFPFunction_getArgumentCount(msg) != 1) return SFP_ERR_ARG_COUNT;
@@ -62,7 +62,7 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 
     /* -- Start condition --
      * ¯¯¯¯¯¯¯¯\________/¯¯¯¯¯¯¯¯
-     * | ~20ms | ~20ms  | ~40us |
+     * | ~25ms | ~25ms  | ~30us |
      */
     /* Pull high for ~25ms */
     while ((Time_getSystemTime_us()-startTimeUs) <= 25000);
@@ -80,9 +80,7 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
      * | 80us  | 80us | 50us | 27us | 50us |  70us      | .....
      * | start burst  | Answer : 0  | Answer : 1        | .....
      */
-    /* Input, pullup */
-    LPC_GPIO->CLR[port] = (1 << pinNum);
-    *LPC_PIN_REGISTERS[dht_data] |= (1 << 2) & LPC_PIN_MODE_MASK;
+    /* Input, no pullup nor pulldown */
     LPC_GPIO->DIR[port] &= ~(1 << pinNum);
 
     uint8_t i;
@@ -115,9 +113,16 @@ SFPResult lpc_dhtxxRead(SFPFunction *msg) {
 			cnt = 0;
 			cnt_compare = 0;
 			while (!(LPC_GPIO->PIN[port] & (1 << pinNum)))
-				cnt++;
+			{
+				if (cnt++ > 1000)
+					break;
+			}
+
 			while ((LPC_GPIO->PIN[port] & (1 << pinNum)))
-				cnt_compare++;
+			{
+				if (cnt_compare++ > 1000)
+					break;
+			}
 
 			data[j/8] <<= 1;
 			if (cnt < cnt_compare)

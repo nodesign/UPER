@@ -76,7 +76,8 @@
 
 #define UPER_FID_UARTINIT			80
 
-#define UPER_FID_DHTXXREAD			200
+#define UPER_FID_DHTXXREAD			100
+#define UPER_FID_HCSR04				101
 
 #define UPER_FID_RESTART			251
 
@@ -125,6 +126,7 @@
 #define UPER_FNAME_UARTINIT			"uartInit"
 
 #define UPER_FNAME_DHTXXREAD		"dhtRead"
+#define UPER_FNAME_HCSR04			"hcsr04Read"
 
 #define UPER_FNAME_RESTART			"restart"
 

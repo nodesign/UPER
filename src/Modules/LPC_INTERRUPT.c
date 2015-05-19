@@ -31,7 +31,7 @@
  *
  */
 #include "main.h"
-#include "Modules/LPC_GPIO/LPC_INTERRUPT.h"
+#include "Modules/LPC_INTERRUPT.h"
 
 static volatile SFPFunctionType LPC_INTERRUPT_FUNCTION_TYPE[LPC_INTERRUPT_COUNT];
 static uint32_t LPC_INTERRUPT_DOWNTIME[LPC_INTERRUPT_COUNT];

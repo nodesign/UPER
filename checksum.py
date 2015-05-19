@@ -13,6 +13,8 @@ for i in range(7):
 f.close()
 result = ((pow(2, 32)-1)-sum) + 1 
 
+print "Checksum : %X"%result
+
 f = open("UPER-Release.bin", "r+")
 f.seek(28)
 f.write(struct.pack("<I", result))

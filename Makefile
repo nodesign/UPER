@@ -31,7 +31,7 @@ HEADERS = $(wildcard *.h)
 # Objects
 OBJS = \
 ./src/cdc_desc.o ./src/cr_startup_lpc11u.o ./src/main.o ./src/time.o ./src/CDC/CDC.o ./src/Driver/system_LPC11Uxx.o \
-./src/Modules/LPC_GPIO/LPC_DHTxx.o ./src/Modules/LPC_GPIO/LPC_INTERRUPT.o ./src/Modules/LPC_GPIO/LPC_PORT.o ./src/Modules/LPC_ADC.o \
+./src/Modules/Devices/DHTxx.o ./src/Modules/Devices/HC-SR04.o ./src/Modules/LPC_INTERRUPT.o ./src/Modules/LPC_PORT.o ./src/Modules/LPC_ADC.o \
 ./src/Modules/LPC_GPIO.o ./src/Modules/LPC_I2C.o ./src/Modules/LPC_PWM.o ./src/Modules/LPC_SPI.o ./src/Modules/LPC_UART.o \
 ./src/System/core_cm0.o ./src/aeabi_romdiv_patch.o \
 ./SFP/src/SFP/SFPFunction.o ./SFP/src/SFP/SFPMisc.o ./SFP/src/SFP/SFPServer.o \
@@ -53,11 +53,13 @@ all: $(TARGET).axf
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 ./src/Driver/system_LPC11Uxx.o: ./src/Driver/system_LPC11Uxx.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-./src/Modules/LPC_GPIO/LPC_DHTxx.o: ./src/Modules/LPC_GPIO/LPC_DHTxx.c
+./src/Modules/Devices/DHTxx.o: ./src/Modules/Devices/DHTxx.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-./src/Modules/LPC_GPIO/LPC_INTERRUPT.o: ./src/Modules/LPC_GPIO/LPC_INTERRUPT.c
+./src/Modules/Devices/HC-SR04.o: ./src/Modules/Devices/HC-SR04.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-./src/Modules/LPC_GPIO/LPC_PORT.o: ./src/Modules/LPC_GPIO/LPC_PORT.c
+./src/Modules/LPC_INTERRUPT.o: ./src/Modules/LPC_INTERRUPT.c
+	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+./src/Modules/LPC_PORT.o: ./src/Modules/LPC_PORT.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 ./src/Modules/LPC_ADC.o: ./src/Modules/LPC_ADC.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

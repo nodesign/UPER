@@ -1,6 +1,6 @@
 /**
- * @file	main.h
- * @author  Giedrius Medzevicius <giedrius@8devices.com>
+ * @file	LPC_DHTxx.h
+ * @author  Paul Rathgeb <paul.rathgeb@skynet.be>
  *
  * @section LICENSE
  *
@@ -30,31 +30,12 @@
  *
  */
 
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef _DHTXX_H_
+#define _DHTXX_H_
 
+#include "main.h"
+#include "Modules/LPC_GPIO.h"
 
-#define UPER_DEVICE_TYPE		'U'
-#define UPER_FW_VERSION_MAJOR	1
-#define UPER_FW_VERSION_MINOR	1
-#define UPER_FIRMWARE_VERSION		((UPER_DEVICE_TYPE << 24) | (UPER_FW_VERSION_MAJOR << 16) | UPER_FW_VERSION_MINOR)
+SFPResult lpc_dhtxxRead(SFPFunction *msg);
 
-#include "LPC11Uxx.h"
-
-#include "lpc_def.h"
-
-#include "UPER/function_def.h"
-
-#include "SFP/SFP.h"
-
-#include <MemoryManager/MemoryManager.h>
-
-#include "time.h"
-
-SFPStream stream;
-
-uint32_t GUID[4];
-uint32_t UPER_PART_NUMBER;
-uint32_t UPER_BOOT_CODE_VERSION;
-
-#endif /* MAIN_H_ */
+#endif // _DHTXX_H_

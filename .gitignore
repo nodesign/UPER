@@ -31,6 +31,9 @@ local.properties
 # C objects
 *.o
 *.d
+*.axf
+*.lss
+*.map
 
 # Dependancies
 SFP/
