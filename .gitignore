@@ -28,14 +28,6 @@ local.properties
 # PDT-specific
 .buildpath
 
-# C objects
-*.o
-*.d
-
-# Dependancies
-SFP/
-MemoryManager/
-
 
 #################
 ## Visual Studio
