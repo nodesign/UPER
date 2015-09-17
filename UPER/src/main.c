@@ -32,6 +32,8 @@
 
 #include "main.h"
 
+#include "userFunctions.h"
+
 #include "CDC/CDC.h"
 
 #include "Modules/LPC_GPIO.h"
@@ -155,6 +157,9 @@ int main(void) {
 	/* Special sensors functions */
 	SFPServer_addFunctionHandler(server, UPER_FNAME_DHTXXREAD, UPER_FID_DHTXXREAD, lpc_dhtxxRead);
 	SFPServer_addFunctionHandler(server, UPER_FNAME_HCSR04, UPER_FID_HCSR04, hcsr04Read);
+
+        /* User defined functions */
+        SFPServer_addUserFunctions(server);
 
 	/* Other functions */
 	SFPServer_addFunctionHandler(server, UPER_FNAME_RESTART,       UPER_FID_RESTART, lpc_system_restart);

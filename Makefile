@@ -23,24 +23,41 @@ SFLAGS = -c -x assembler-with-cpp -mcpu=$(CPU) -mthumb
 LDFLAGS = -nostdlib -Xlinker -Map="$(TARGET).map" -Xlinker --gc-sections -Xlinker --allow-multiple-definition -mcpu=cortex-m0 -mthumb
 
 # Includes
-INCLUDE_DIRS = -I"./UPER/inc" -I"./UPER/inc/Modules" -I"./UPER/inc/USB_h" -I"./UPER/inc/Driver" -I"./UPER/inc/System" -I"./MemoryManager/inc" -I"./SFP/inc/" -I"./SFP/inc/SFP"
+INCLUDE_DIRS = -I"./UPER/inc" -I"./UPER/inc/Modules" -I"./UPER/inc/USB_h" -I"./UPER/inc/Driver" -I"./UPER/inc/System" \
+	       -I"./MemoryManager/inc" -I"./SFP/inc/" -I"./SFP/inc/SFP" -I"./UserFunctions"
 
 CSOURCE = $(wildcard *.c)
 HEADERS = $(wildcard *.h)
 
 # Objects
 OBJS = \
-./UPER/src/cdc_desc.o ./UPER/src/cr_startup_lpc11u.o ./UPER/src/main.o ./UPER/src/time.o ./UPER/src/CDC/CDC.o ./UPER/src/Driver/system_LPC11Uxx.o \
-./UPER/src/Modules/Devices/DHTxx.o ./UPER/src/Modules/Devices/HC-SR04.o ./UPER/src/Modules/LPC_INTERRUPT.o ./UPER/src/Modules/LPC_PORT.o ./UPER/src/Modules/LPC_ADC.o \
-./UPER/src/Modules/LPC_GPIO.o ./UPER/src/Modules/LPC_I2C.o ./UPER/src/Modules/LPC_PWM.o ./UPER/src/Modules/LPC_SPI.o ./UPER/src/Modules/LPC_UART.o \
-./UPER/src/System/core_cm0.o ./UPER/src/aeabi_romdiv_patch.o \
-./SFP/src/SFP/SFPFunction.o ./SFP/src/SFP/SFPMisc.o ./SFP/src/SFP/SFPServer.o \
-./MemoryManager/src/MemoryManager/MemoryManager.o
+./UPER/src/cdc_desc.o \
+./UPER/src/cr_startup_lpc11u.o \
+./UPER/src/main.o \
+./UPER/src/time.o \
+./UPER/src/CDC/CDC.o \
+./UPER/src/Driver/system_LPC11Uxx.o \
+./UPER/src/Modules/Devices/DHTxx.o \
+./UPER/src/Modules/Devices/HC-SR04.o \
+./UPER/src/Modules/LPC_INTERRUPT.o \
+./UPER/src/Modules/LPC_PORT.o \
+./UPER/src/Modules/LPC_ADC.o \
+./UPER/src/Modules/LPC_GPIO.o \
+./UPER/src/Modules/LPC_I2C.o \
+./UPER/src/Modules/LPC_PWM.o \
+./UPER/src/Modules/LPC_SPI.o \
+./UPER/src/Modules/LPC_UART.o \
+./UPER/src/System/core_cm0.o \
+./UPER/src/aeabi_romdiv_patch.o \
+./SFP/src/SFP/SFPFunction.o \
+./SFP/src/SFP/SFPMisc.o \
+./SFP/src/SFP/SFPServer.o \
+./MemoryManager/src/MemoryManager/MemoryManager.o \
+./UserFunctions/UserFunctions.o
 
 .PHONY: all
 # All Target
-all: $(TARGET).axf
-
+all: $(TARGET).axf post-build
 ./UPER/src/cdc_desc.o: ./UPER/src/cdc_desc.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 ./UPER/src/cr_startup_lpc11u.o: ./UPER/src/cr_startup_lpc11u.c
@@ -85,11 +102,12 @@ all: $(TARGET).axf
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 ./MemoryManager/src/MemoryManager/MemoryManager.o: ./MemoryManager/src/MemoryManager/MemoryManager.c
 	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+./UserFunctions/UserFunctions.o: ./UserFunctions/UserFunctions.c
+	$(CC) $(INCLUDE_DIRS) $(CDEFS) $(CFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 
 # Tool invocations
 $(TARGET).axf: $(OBJS) $(USER_OBJS)
 	$(CC) $(LDFLAGS) -T "./UPER/$(TARGET).ld" -o "$(TARGET).axf" $(OBJS) $(USER_OBJS) $(LIBS) $(LIBS_PATH)
-	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
