@@ -37,34 +37,34 @@
  * Usage : SFPServer_addFunctionHandler(server, FNAME, FID, callback);
  */
 void SFPServer_addUserFunctions(SFPServer *server) {
-    SFPServer_addFunctionHandler(server, "dummy", 1000, dummyFunction);
+	SFPServer_addFunctionHandler(server, "dummy", 1000, dummyFunction);
 }
 
 /* 
  * This is a dummy function, used as demonstration
  */
 SFPResult dummyFunction(SFPFunction *msg) {
-    /* Check for arg count */
+	/* Check for arg count */
 	if (SFPFunction_getArgumentCount(msg) != 1) return SFP_ERR_ARG_COUNT;
-    /* Check for arg type */
+	/* Check for arg type */
 	if (SFPFunction_getArgumentType(msg, 0) != SFP_ARG_INT) return SFP_ERR_ARG_TYPE;
-    /* Get the argument */
+	/* Get the argument */
 	uint32_t dummyData = SFPFunction_getArgument_int32(msg, 0);
 
 	/* Do some stupid things */
-    dummyData += 1;
-    
-    /* Start a new frame */
-    SFPFunction *outFunc = SFPFunction_new();
+	dummyData += 1;
+
+	/* Start a new frame */
+	SFPFunction *outFunc = SFPFunction_new();
 	if (outFunc == NULL) return SFP_ERR_ALLOC_FAILED;
-    /* Then fill the frame */
+	/* Then fill the frame */
 	SFPFunction_setType(outFunc, SFPFunction_getType(msg));
 	SFPFunction_setID(outFunc, 1000); /* Put the Function ID */
 	SFPFunction_setName(outFunc, "dummy"); /* Put the function name */
 	SFPFunction_addArgument_int32(outFunc, dummyData); /* Put the values you want to send back */  
-    /* Send it */
+	/* Send it */
 	SFPFunction_send(outFunc, &stream);
-    /* End finalize */
+	/* End finalize */
 	SFPFunction_delete(outFunc);
 
 	return SFP_OK;
