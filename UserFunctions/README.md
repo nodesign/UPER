@@ -68,7 +68,7 @@ And that's it. The complete function can be shown [here](https://github.com/ks15
 
 The argument for SFPFunction_setID and SFPFUnction_setName will be described later.
 
-## Linking the custom function in SFP
+## Linking the custom function to SFP
 The custom function must be registered in the SFP server. This registration is done in the function *SFPServer_addUserFunctions* this way :
 
 ```
