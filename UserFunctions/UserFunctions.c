@@ -37,7 +37,7 @@
  * Usage : SFPServer_addFunctionHandler(server, FNAME, FID, callback);
  */
 void SFPServer_addUserFunctions(SFPServer *server) {
-	SFPServer_addFunctionHandler(server, "dummy", 1000, dummyFunction);
+	SFPServer_addFunctionHandler(server, "dummy", 200, dummyFunction);
 }
 
 /* 
@@ -52,14 +52,18 @@ SFPResult dummyFunction(SFPFunction *msg) {
 	uint32_t dummyData = SFPFunction_getArgument_int32(msg, 0);
 
 	/* Do some stupid things */
-	dummyData += 1;
+	LPC_GPIO->DIR[1] = 1 << 14;
+	if (dummyData)
+	    LPC_GPIO->SET[1] = 1 << 14;
+	else
+	    LPC_GPIO->CLR[1] = 1 << 14;
 
 	/* Start a new frame */
 	SFPFunction *outFunc = SFPFunction_new();
 	if (outFunc == NULL) return SFP_ERR_ALLOC_FAILED;
 	/* Then fill the frame */
 	SFPFunction_setType(outFunc, SFPFunction_getType(msg));
-	SFPFunction_setID(outFunc, 1000); /* Put the Function ID */
+	SFPFunction_setID(outFunc, 200); /* Put the Function ID */
 	SFPFunction_setName(outFunc, "dummy"); /* Put the function name */
 	SFPFunction_addArgument_int32(outFunc, dummyData); /* Put the values you want to send back */  
 	/* Send it */

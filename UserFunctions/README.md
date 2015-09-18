@@ -10,7 +10,7 @@ This directory contains two files :
 
 # How to write a custom function
 To explains how to write a custom function, here's a short example. 
-In this example, a number is sent, the function will add one to this number, and send it back.
+In this example, a LED will be turned ON when the argument is 1, and OFF when it is at 0.
 
 ## Writing the function
 All custom functions must have an argument of type SFPFunction* and a return value of type SFPResult, as shown below :
@@ -40,10 +40,14 @@ The value can be read with the function :
 uint32_t dummyData = SFPFunction_getArgument_int32(msg, n); // Where n is the argument number.
 ```
 
-Once all the arguments have been read, the processing can start. In my case, I just want to add one to my argmument :
+Once all the arguments have been read, the processing can start. In my case, I have to test the argument, and control a GPIO :
 
 ```
-dummyData += 1;
+LPC_GPIO->DIR[1] = 1 << 14; // Set GPIO1_14 as output
+if (dummyData)
+    LPC_GPIO->CLR[1] = 1 << 14; // Clear GPIO1_14
+else
+    LPC_GPIO->SET[1] = 1 << 14; // Set GPIO1_14
 ```
 
 Once the processing is finished, a status can be sent back. Here, I just want to send back the result :
@@ -55,7 +59,7 @@ Once the processing is finished, a status can be sent back. Here, I just want to
 	
 	/* Then fill the frame */
 	SFPFunction_setType(outFunc, SFPFunction_getType(msg));
-	SFPFunction_setID(outFunc, 1000); /* Put the Function ID */
+	SFPFunction_setID(outFunc, 250); /* Put the Function ID */
 	SFPFunction_setName(outFunc, "dummy"); /* Put the function name */
 	SFPFunction_addArgument_int32(outFunc, dummyData); /* Put the values you want to send back */  
 	/* Send it */
@@ -84,12 +88,12 @@ Arguments are :
 
 For now, *fname* is not used. However, I recommand to use it for a potential future use.
 
-__*fid*__ must be a unique identifier. ID < 1000 are reserved and shouldn't be used for a custom function.
+__*fid*__ must be a unique identifier. ID must be comprised between 200 and 250. 0..199 and 251..255 are reserved and must not be used for a custom function.
 
-In this example, fname will be "dummy", and fid 1000 :
+In this example, fname will be "dummy", and fid 200 :
 
 ```
-SFPServer_addFunctionHandler(server, 'dummy', 1000, dummyFunction);
+SFPServer_addFunctionHandler(server, 'dummy', 200, dummyFunction);
 ```
 
 Your custom function must be public. Don't forget to add the definition in UserFunctions.h :
