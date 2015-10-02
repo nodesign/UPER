@@ -1,6 +1,6 @@
 [submodule "MemoryManager"]
 	path = MemoryManager
-	url = https://github.com/ks156/MemoryManager
+	url = https://github.com/8devices/MemoryManager
 [submodule "SFP"]
 	path = SFP
-	url = https://github.com/ks156/SFP
+	url = https://github.com/GiedriusM/SFP
